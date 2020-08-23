@@ -3,11 +3,10 @@ pipeline {
     stages {
         stage("Upload to AWS") {
             steps {
-                sh '''
-                    echo "Multiline shell steps works too"
-                    pwd
-                    ls -lah
-                '''
+                withAWS(region:'ap-southeast-2', credentials:'aws-static') {
+                    sh 'echo "Uploading content to S3 with AWS credentials"'
+                    s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file:'index.html', bucket:'udacity-jenkins-kailigu')
+                }
             }
         }
     }
